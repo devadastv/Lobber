@@ -56,10 +56,10 @@ public class LobberView extends Frame
 //        }
 //    }
 
-    public void updateField(byte[][] playGrid, GridPosition currentOpponentPosition, GridPosition lastPlayerPosition, GridPosition lastOpponentPosition)
-    {
-        grid.updateCells(playGrid, currentOpponentPosition, lastPlayerPosition, lastOpponentPosition);
-    }
+//    public void updateField(byte[][] playGrid, GridPosition currentOpponentPosition, GridPosition lastPlayerPosition, GridPosition lastOpponentPosition)
+//    {
+//        grid.updateCells(playGrid, currentOpponentPosition, lastPlayerPosition, lastOpponentPosition);
+//    }
 
     public void setKeyListener(KeyListener keyListener)
     {
@@ -78,6 +78,21 @@ public class LobberView extends Frame
         grid.initializeCells();
         grid.setVisible(true);
         this.add(grid);
+    }
+
+    public void shiftFocusToCell(GridPosition position)
+    {
+        grid.shiftFocusToCell(position);
+    }
+
+    public void updateLobberStatus(int lobberStatus)
+    {
+        // TODO
+    }
+
+    public void selectCell(GridPosition position, int cellValue)
+    {
+        grid.selectCell(position, cellValue);
     }
 
 }

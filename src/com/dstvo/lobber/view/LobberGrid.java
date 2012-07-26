@@ -17,12 +17,12 @@ import java.awt.Label;
  */
 public class LobberGrid extends Container
 {
-    Label[][] cells;
+    LobberCell[][] cells;
 
     // TODO: Use layout instead of hard-coding bounds
     void initializeCells()
     {
-        cells = new Label[LobberConstants.ROW_COUNT][LobberConstants.COLUMN_COUNT];
+        cells = new LobberCell[LobberConstants.ROW_COUNT][LobberConstants.COLUMN_COUNT];
         int cellWidth = getWidth() / LobberConstants.ROW_COUNT;
         int cellHeight = getHeight() / LobberConstants.COLUMN_COUNT;
         int cellY_Pos, cellX_Pos;
@@ -32,7 +32,7 @@ public class LobberGrid extends Container
             for (int column = 0; column < cells[row].length; column++)
             {
                 cellX_Pos = cellWidth * column;
-                Label cell = cells[row][column] = new Label();
+                LobberCell cell = cells[row][column] = new LobberCell();
                 cell.setBounds(cellX_Pos, cellY_Pos, cellWidth, cellHeight);
                 cell.setBackground(new Color(row * 15, column * 15, 100));
                 cell.setAlignment(Label.CENTER);
@@ -43,31 +43,70 @@ public class LobberGrid extends Container
     }
 
     // TODO: Modify logic to update only the changed cells
-    public void updateCells(byte[][] cellValues, GridPosition currentOpponentPosition,
-            GridPosition lastPlayerPosition, GridPosition lastOpponentPosition)
+//    public void updateCells(byte[][] cellValues, GridPosition currentOpponentPosition,
+//            GridPosition lastPlayerPosition, GridPosition lastOpponentPosition)
+//    {
+//        for (int row = 0; row < cellValues.length; row++)
+//        {
+//            for (int column = 0; column < cellValues[row].length; column++)
+//            {
+//                byte b = cellValues[row][column];
+//                System.out.println("b = " + b);
+//                if (b == CellContent.PLAYER_CELL)
+//                {
+//                    cells[row][column].setText("P");
+//                } else if (b == CellContent.OPPONENT_CELL)
+//                {
+//                    cells[row][column].setText("O");
+//                }
+//                if (currentOpponentPosition.getRow() == row && currentOpponentPosition.getColumn() == column)
+//                {
+//                    cells[row][column].setBackground(Color.white);
+//                }
+//                else
+//                {
+//                    cells[row][column].setBackground(new Color(row * 15, column * 15, 100));
+//                }
+//            }
+//        }
+//    }
+
+    LobberCell lastPlayerSelectedCell;
+    LobberCell lastOpponentSelectedCell;
+    LobberCell lastFocusCell;
+
+    void shiftFocusToCell(GridPosition currentPos)
     {
-        for (int row = 0; row < cellValues.length; row++)
+       LobberCell currentFocusCell = cells[currentPos.getRow()][currentPos.getColumn()];
+       currentFocusCell.setHighlighted(true);
+       if (null != lastFocusCell)
+       {
+           lastFocusCell.setHighlighted(false);
+       }
+       lastFocusCell = currentFocusCell;
+    }
+
+    void selectCell(GridPosition currentPos, int cellValue)
+    {
+        LobberCell currentSelectedCell = cells[currentPos.getRow()][currentPos.getColumn()];
+        currentSelectedCell.setCellValue(cellValue);
+        currentSelectedCell.setSelected(true);
+        switch (cellValue)
         {
-            for (int column = 0; column < cellValues[row].length; column++)
-            {
-                byte b = cellValues[row][column];
-                System.out.println("b = " + b);
-                if (b == CellContent.PLAYER_CELL)
+            case CellContent.OPPONENT_CELL:
+                if (null != lastOpponentSelectedCell)
                 {
-                    cells[row][column].setText("P");
-                } else if (b == CellContent.OPPONENT_CELL)
-                {
-                    cells[row][column].setText("O");
+                    lastOpponentSelectedCell.setSelected(false);
                 }
-                if (currentOpponentPosition.getRow() == row && currentOpponentPosition.getColumn() == column)
+                lastOpponentSelectedCell = currentSelectedCell;
+                break;
+            case CellContent.PLAYER_CELL:
+                if (null != lastPlayerSelectedCell)
                 {
-                    cells[row][column].setBackground(Color.white);
+                    lastPlayerSelectedCell.setSelected(false);
                 }
-                else
-                {
-                    cells[row][column].setBackground(new Color(row * 15, column * 15, 100));
-                }
-            }
+                lastPlayerSelectedCell = currentSelectedCell;
+                break;
         }
     }
 }

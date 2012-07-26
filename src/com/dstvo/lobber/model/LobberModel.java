@@ -30,7 +30,7 @@ public class LobberModel implements IGridModel
 
     public void initialize()
     {
-        view.updateField(playGrid, currentOpponentPos, null, null);
+        shiftFocusToCell(currentOpponentPos);
     }
 
     public void moveRight()
@@ -39,7 +39,7 @@ public class LobberModel implements IGridModel
         {
             currentOpponentPos.setColumn(currentOpponentPos.getColumn() + 1);
         }
-        view.updateField(playGrid, currentOpponentPos, null, null);
+        shiftFocusToCell(currentOpponentPos);
     }
 
     public void moveLeft()
@@ -48,7 +48,7 @@ public class LobberModel implements IGridModel
         {
             currentOpponentPos.setColumn(currentOpponentPos.getColumn() - 1);
         }
-        view.updateField(playGrid, currentOpponentPos, null, null);
+        shiftFocusToCell(currentOpponentPos);
     }
 
     public void moveDown()
@@ -57,7 +57,7 @@ public class LobberModel implements IGridModel
         {
             currentOpponentPos.setRow(currentOpponentPos.getRow() + 1);
         }
-        view.updateField(playGrid, currentOpponentPos, null, null);
+        shiftFocusToCell(currentOpponentPos);
     }
 
     public void moveUp()
@@ -66,7 +66,7 @@ public class LobberModel implements IGridModel
         {
             currentOpponentPos.setRow(currentOpponentPos.getRow() - 1);
         }
-        view.updateField(playGrid, currentOpponentPos, null, null);
+        shiftFocusToCell(currentOpponentPos);
     }
 
     public void processSelection()
@@ -82,9 +82,9 @@ public class LobberModel implements IGridModel
          * 3. Check if player won, display message and give options
          * 4. Else, wait for opponent to play
          */
-        updateGrid();
+        selectCell(currentOpponentPos, CellContent.OPPONENT_CELL);
         lastPlayerPosition = getBestMove();
-        updateGrid();
+        selectCell(getBestMove(), CellContent.PLAYER_CELL);
     }
 
     // NOTE: DUMMY IMPLEMENTATION
@@ -94,15 +94,26 @@ public class LobberModel implements IGridModel
         if (currentOpponentPos.getRow() >= 0 && currentOpponentPos.getRow() < LobberConstants.ROW_COUNT - 1)
         {
             temp.setRow(currentOpponentPos.getRow() + 1);
-        } else if (currentOpponentPos.getColumn() >= 0 && currentOpponentPos.getColumn() < LobberConstants.COLUMN_COUNT - 1)
+        }
+        if (currentOpponentPos.getColumn() >= 0 && currentOpponentPos.getColumn() < LobberConstants.COLUMN_COUNT - 1)
         {
             temp.setColumn(currentOpponentPos.getColumn() + 1);
         }
         return temp;
     }
 
-    private void updateGrid()
+    private void shiftFocusToCell(GridPosition position)
     {
-        view.updateField(playGrid, currentOpponentPos, lastPlayerPosition, lastOpponentPosition);
+        view.shiftFocusToCell(position);
+    }
+
+    private void updateLobberStatus(int lobberStatus)
+    {
+        view.updateLobberStatus(lobberStatus);
+    }
+
+    private void selectCell (GridPosition position, int cellValue)
+    {
+        view.selectCell(position, cellValue);
     }
 }
