@@ -10,11 +10,10 @@ import com.dstvo.lobber.controller.LobberController;
 
 /**
  *
- * @author user
+ * @author Devadas.Vijayan
  */
 public class LobberApp
 {
-
     int ROW_COLUMN_COUNT = 10;
 
     /**

@@ -6,11 +6,10 @@ package com.dstvo.lobber.model;
 
 /**
  *
- * @author user
+ * @author Devadas.Vijayan
  */
 public class GridPosition
 {
-
     private int row, column;
 
     public int getColumn()
@@ -33,7 +32,6 @@ public class GridPosition
         this.row = row;
     }
 
-    
     public GridPosition(int row, int column)
     {
         this.row = row;

@@ -6,7 +6,7 @@ package com.dstvo.lobber.model;
 
 /**
  *
- * @author user
+ * @author Devadas.Vijayan
  */
 public interface CellContent
 {

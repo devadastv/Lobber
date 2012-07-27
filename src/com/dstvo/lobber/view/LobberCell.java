@@ -11,7 +11,7 @@ import java.awt.Label;
 
 /**
  *
- * @author user
+ * @author Devadas.Vijayan
  */
 public class LobberCell extends Label
 {

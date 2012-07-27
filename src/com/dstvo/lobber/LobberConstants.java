@@ -8,7 +8,7 @@ import java.awt.Color;
 
 /**
  *
- * @author user
+ * @author Devadas.Vijayan
  */
 public interface LobberConstants
 {
