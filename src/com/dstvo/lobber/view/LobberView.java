@@ -90,7 +90,7 @@ public class LobberView extends Frame
         // TODO
     }
 
-    public void selectCell(GridPosition position, int cellValue)
+    public void selectCell(GridPosition position, byte cellValue)
     {
         grid.selectCell(position, cellValue);
     }

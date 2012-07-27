@@ -39,4 +39,9 @@ public class GridPosition
         this.row = row;
         this.column = column;
     }
+
+    public String toString()
+    {
+        return "GridPosition [Row=" + row + ", Column=" + column + "]";
+    }
 }
