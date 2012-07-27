@@ -33,7 +33,7 @@ public class LobberGrid extends Container
             {
                 cellX_Pos = cellWidth * column;
                 LobberCell cell = cells[row][column] = new LobberCell();
-                cell.setBounds(cellX_Pos, cellY_Pos, cellWidth, cellHeight);
+                cell.setBounds(cellX_Pos, cellY_Pos, cellWidth - 1, cellHeight - 1);
                 cell.setBackground(new Color(row * 15, column * 15, 100));
                 cell.setAlignment(Label.CENTER);
                 add(cell);

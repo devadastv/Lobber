@@ -12,6 +12,6 @@ public interface CellContent
 {
     byte OPPONENT_CELL = 1;
     byte PLAYER_CELL = 2;
-    byte NON_FILLED_CELL = 0;
-    byte OUT_OF_BOUND_CELL = -2;
+    byte NON_FILLED_CELL = 0; // This is the value on which the byte array is initialized and no need to assign a value for each byte
+    byte OUT_OF_BOUND_CELL = 3;
 }
