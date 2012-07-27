@@ -71,20 +71,22 @@ public class LobberModel implements IGridModel
 
     public void processSelection()
     {
+        System.out.println("Inside processSelection currentOpponentPos = " + currentOpponentPos);
+        System.out.println("playGrid[currentOpponentPos.getRow()][currentOpponentPos.getColumn()] = " + playGrid[currentOpponentPos.getRow()][currentOpponentPos.getColumn()]);
         if (playGrid[currentOpponentPos.getRow()][currentOpponentPos.getColumn()] == CellContent.NON_FILLED_CELL)
         {
             playGrid[currentOpponentPos.getRow()][currentOpponentPos.getColumn()] = CellContent.OPPONENT_CELL;
+            /*
+             * 1. Check if opponent won. If so, display message and give options
+             * 2. If not, player to find the best move and play it. Update the field.
+             * 3. Check if player won, display message and give options
+             * 4. Else, wait for opponent to play
+             */
+            selectCell(currentOpponentPos, CellContent.OPPONENT_CELL);
+            boolean playerWinStatus = isPlayerWon();
+            lastPlayerPosition = getBestMove();
+            selectCell(getBestMove(), CellContent.PLAYER_CELL);
         }
-
-        /*
-         * 1. Check if opponent won. If so, display message and give options
-         * 2. If not, player to find the best move and play it. Update the field.
-         * 3. Check if player won, display message and give options
-         * 4. Else, wait for opponent to play
-         */
-        selectCell(currentOpponentPos, CellContent.OPPONENT_CELL);
-        lastPlayerPosition = getBestMove();
-        selectCell(getBestMove(), CellContent.PLAYER_CELL);
     }
 
     // NOTE: DUMMY IMPLEMENTATION
@@ -112,8 +114,15 @@ public class LobberModel implements IGridModel
         view.updateLobberStatus(lobberStatus);
     }
 
-    private void selectCell (GridPosition position, int cellValue)
+    private void selectCell (GridPosition position, byte cellValue)
     {
+        playGrid[position.getRow()][position.getColumn()] = cellValue;
         view.selectCell(position, cellValue);
+    }
+
+    private boolean isPlayerWon()
+    {
+        
+        return false;
     }
 }

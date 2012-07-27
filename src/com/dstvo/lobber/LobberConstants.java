@@ -22,5 +22,6 @@ public interface LobberConstants
     int GRID_TOP_OFFSET = 0;
     int GRID_BOTTOM_OFFSET = 0;
     int GRID_RIGHT_OFFSET = 0;
+    int COUNT_FOR_WIN = 5;
     Color FOCUSED_CELL_COLOR = Color.white;
 }

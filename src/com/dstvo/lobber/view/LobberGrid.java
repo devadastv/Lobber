@@ -86,7 +86,7 @@ public class LobberGrid extends Container
        lastFocusCell = currentFocusCell;
     }
 
-    void selectCell(GridPosition currentPos, int cellValue)
+    void selectCell(GridPosition currentPos, byte cellValue)
     {
         LobberCell currentSelectedCell = cells[currentPos.getRow()][currentPos.getColumn()];
         currentSelectedCell.setCellValue(cellValue);
