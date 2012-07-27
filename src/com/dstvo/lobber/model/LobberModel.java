@@ -83,9 +83,13 @@ public class LobberModel implements IGridModel
              * 4. Else, wait for opponent to play
              */
             selectCell(currentOpponentPos, CellContent.OPPONENT_CELL);
-            boolean playerWinStatus = isPlayerWon();
-            lastPlayerPosition = getBestMove();
-            selectCell(getBestMove(), CellContent.PLAYER_CELL);
+            boolean playerWinStatus = checkWinStatus(CellContent.OPPONENT_CELL);
+            if (playerWinStatus)
+            {
+                System.out.println("OPPONENT WON......");
+            }
+//            lastPlayerPosition = getBestMove();
+//            selectCell(getBestMove(), CellContent.PLAYER_CELL);
         }
     }
 
@@ -119,10 +123,23 @@ public class LobberModel implements IGridModel
         playGrid[position.getRow()][position.getColumn()] = cellValue;
         view.selectCell(position, cellValue);
     }
+    
+    LobberLogic logic = new LobberLogic();
 
-    private boolean isPlayerWon()
+    private boolean checkWinStatus(byte playerToBeChecked)
     {
-        
-        return false;
+        GridPosition positionToCheck;
+        if (playerToBeChecked == CellContent.OPPONENT_CELL)
+        {
+            positionToCheck = currentOpponentPos;
+
+        } else if (playerToBeChecked == CellContent.OPPONENT_CELL)
+        {
+            positionToCheck = lastPlayerPosition;
+        } else
+        {
+            return false;
+        }
+        return (logic.testWin(playGrid, positionToCheck) == playerToBeChecked);
     }
 }
