@@ -24,7 +24,7 @@ public class LobberView extends Frame
                 LobberConstants.APP_WIDTH, LobberConstants.APP_HEIGHT);
         this.setBackground(Color.black);
         createLobberGrid();
-        this.setResizable(false);
+//        this.setResizable(false);
         this.setVisible(true);
         this.requestFocus();
     }
@@ -69,15 +69,18 @@ public class LobberView extends Frame
     private void createLobberGrid()
     {
         grid = new LobberGrid();
-        grid.setBounds(LobberConstants.GRID_LEFT_OFFSET,
-                LobberConstants.GRID_TOP_OFFSET,
-                getWidth() - (LobberConstants.GRID_LEFT_OFFSET + LobberConstants.GRID_RIGHT_OFFSET),
-                getHeight() - (LobberConstants.GRID_TOP_OFFSET + LobberConstants.GRID_BOTTOM_OFFSET));
+//        grid.setBounds(LobberConstants.GRID_LEFT_OFFSET,
+//                LobberConstants.GRID_TOP_OFFSET,
+//                getWidth() - (LobberConstants.GRID_LEFT_OFFSET + LobberConstants.GRID_RIGHT_OFFSET),
+//                getHeight() - (LobberConstants.GRID_TOP_OFFSET + LobberConstants.GRID_BOTTOM_OFFSET));
+        
+        grid.setBounds(LobberConstants.GRID_X_POS, LobberConstants.GRID_Y_POS, LobberConstants.GRID_WIDTH, LobberConstants.GRID_HEIGHT);
+        this.add(grid);
         System.out.println("Frame Bounds is " + getBounds());
         System.out.println("Grid Bounds is " + grid.getBounds());
         grid.initializeCells();
         grid.setVisible(true);
-        this.add(grid);
+        
     }
 
     public void shiftFocusToCell(GridPosition position)
