@@ -24,7 +24,7 @@ public class LobberController implements KeyListener
 
     public void startPlay()
     {
-        model.initialize();
+        model.start();
     }
 
     public void keyTyped(KeyEvent e)
@@ -49,6 +49,9 @@ public class LobberController implements KeyListener
                 break;
             case KeyEvent.VK_ENTER:
                 model.processSelection();
+                break;
+            case KeyEvent.VK_1:
+                model.reset();
                 break;
         }
     }
