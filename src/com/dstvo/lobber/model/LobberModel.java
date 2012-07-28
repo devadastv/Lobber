@@ -16,9 +16,8 @@ public class LobberModel implements IGridModel
     
     LobberView view;
     byte[][] playGrid;
-    GridPosition lastPlayerPosition;
     GridPosition currentOpponentPos;
-    GridPosition lastOpponentPosition;
+    LobberLogic logic = new LobberLogic();
 
     public LobberModel(LobberView view)
     {
@@ -71,11 +70,8 @@ public class LobberModel implements IGridModel
 
     public void processSelection()
     {
-        System.out.println("Inside processSelection currentOpponentPos = " + currentOpponentPos);
-        System.out.println("playGrid[currentOpponentPos.getRow()][currentOpponentPos.getColumn()] = " + playGrid[currentOpponentPos.getRow()][currentOpponentPos.getColumn()]);
         if (playGrid[currentOpponentPos.getRow()][currentOpponentPos.getColumn()] == CellContent.NON_FILLED_CELL)
         {
-            playGrid[currentOpponentPos.getRow()][currentOpponentPos.getColumn()] = CellContent.OPPONENT_CELL;
             /*
              * 1. Check if opponent won. If so, display message and give options
              * 2. If not, player to find the best move and play it. Update the field.
@@ -83,29 +79,27 @@ public class LobberModel implements IGridModel
              * 4. Else, wait for opponent to play
              */
             selectCell(currentOpponentPos, CellContent.OPPONENT_CELL);
-            boolean playerWinStatus = checkWinStatus(CellContent.OPPONENT_CELL);
-            if (playerWinStatus)
+            boolean opponentWinStatus = checkWinStatus(CellContent.OPPONENT_CELL, currentOpponentPos);
+            if (opponentWinStatus)
             {
                 System.out.println("OPPONENT WON......");
+            } else
+            {
+                GridPosition playerPosition = getBestMove();
+                selectCell(playerPosition, CellContent.PLAYER_CELL);
+                boolean playerWinStatus = checkWinStatus(CellContent.PLAYER_CELL, playerPosition);
+                if (playerWinStatus)
+                {
+                    System.out.println("PLAYER WON......");
+                }
             }
-//            lastPlayerPosition = getBestMove();
-//            selectCell(getBestMove(), CellContent.PLAYER_CELL);
         }
     }
 
     // NOTE: DUMMY IMPLEMENTATION
     private GridPosition getBestMove()
     {
-        GridPosition temp = new GridPosition(0, 0);
-        if (currentOpponentPos.getRow() >= 0 && currentOpponentPos.getRow() < LobberConstants.ROW_COUNT - 1)
-        {
-            temp.setRow(currentOpponentPos.getRow() + 1);
-        }
-        if (currentOpponentPos.getColumn() >= 0 && currentOpponentPos.getColumn() < LobberConstants.COLUMN_COUNT - 1)
-        {
-            temp.setColumn(currentOpponentPos.getColumn() + 1);
-        }
-        return temp;
+        return logic.getBestMove(playGrid);
     }
 
     private void shiftFocusToCell(GridPosition position)
@@ -122,24 +116,13 @@ public class LobberModel implements IGridModel
     {
         playGrid[position.getRow()][position.getColumn()] = cellValue;
         view.selectCell(position, cellValue);
+        logic.updateBoundary(position);
     }
     
-    LobberLogic logic = new LobberLogic();
+    
 
-    private boolean checkWinStatus(byte playerToBeChecked)
+    private boolean checkWinStatus(byte playerToCheck, GridPosition positionToCheck)
     {
-        GridPosition positionToCheck;
-        if (playerToBeChecked == CellContent.OPPONENT_CELL)
-        {
-            positionToCheck = currentOpponentPos;
-
-        } else if (playerToBeChecked == CellContent.OPPONENT_CELL)
-        {
-            positionToCheck = lastPlayerPosition;
-        } else
-        {
-            return false;
-        }
-        return (logic.testWin(playGrid, positionToCheck) == playerToBeChecked);
+        return (logic.testWin(playGrid, positionToCheck) == playerToCheck);
     }
 }
