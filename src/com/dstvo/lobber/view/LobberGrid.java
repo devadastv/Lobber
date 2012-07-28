@@ -81,7 +81,7 @@ public class LobberGrid extends Container
     {
        LobberCell currentFocusCell = cells[currentPos.getRow()][currentPos.getColumn()];
        currentFocusCell.setHighlighted(true);
-       if (null != lastFocusCell)
+       if ((null != lastFocusCell) && (lastFocusCell != currentFocusCell))
        {
            lastFocusCell.setHighlighted(false);
        }
@@ -109,6 +109,20 @@ public class LobberGrid extends Container
                 }
                 lastPlayerSelectedCell = currentSelectedCell;
                 break;
+        }
+    }
+
+    void reset()
+    {
+        for (int row = 0; row < cells.length; row++)
+        {
+            for (int column = 0; column < cells[row].length; column++)
+            {
+                LobberCell cell = cells[row][column];
+                cell.setCellValue(CellContent.NON_FILLED_CELL);
+                cell.setSelected(false);
+                cell.setHighlighted(false);
+            }
         }
     }
 }

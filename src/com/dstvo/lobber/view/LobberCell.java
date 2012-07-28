@@ -46,19 +46,27 @@ public class LobberCell extends Label
     public void setSelected(boolean selectStatus)
     {
         this.isSelected = selectStatus;
-        if (isSelected)
+        if (cellValue != CellContent.NON_FILLED_CELL)
         {
-            setText("*" + cellValue);
-        } else
-        {
-            setText("" + cellValue);
+            if (isSelected)
+            {
+                setText("*" + cellValue);
+            } else
+            {
+                setText("" + cellValue);
+            }
         }
-
     }
 
     public void setCellValue(int cellValue)
     {
         this.cellValue = cellValue;
-        setText("" + cellValue);
+        if (cellValue != CellContent.NON_FILLED_CELL)
+        {
+            setText("" + cellValue);
+        } else
+        {
+            setText("");
+        }
     }
 }
