@@ -13,11 +13,11 @@ import com.dstvo.lobber.view.LobberView;
  */
 public class LobberModel implements IGridModel
 {
-    
     LobberView view;
     byte[][] playGrid;
     GridPosition currentOpponentPos;
     LobberLogic logic = new LobberLogic();
+    private int state;
 
     public LobberModel(LobberView view)
     {
@@ -27,72 +27,111 @@ public class LobberModel implements IGridModel
         currentOpponentPos = new GridPosition(LobberConstants.ROW_COUNT / 2, LobberConstants.COLUMN_COUNT / 2);
     }
 
-    public void initialize()
+    public void start()
     {
         shiftFocusToCell(currentOpponentPos);
+        view.showUI();
+        displayStatus(LobberState.WELCOME_PLAYER);
     }
 
     public void moveRight()
     {
-        if (currentOpponentPos.getColumn() < LobberConstants.COLUMN_COUNT - 1)
+        if (state == LobberState.WELCOME_PLAYER || state == LobberState.WAITING_FOR_OPPONENT)
         {
-            currentOpponentPos.setColumn(currentOpponentPos.getColumn() + 1);
+            if (currentOpponentPos.getColumn() < LobberConstants.COLUMN_COUNT - 1)
+            {
+                currentOpponentPos.setColumn(currentOpponentPos.getColumn() + 1);
+            }
+            shiftFocusToCell(currentOpponentPos);
         }
-        shiftFocusToCell(currentOpponentPos);
     }
 
     public void moveLeft()
     {
-        if (currentOpponentPos.getColumn() > 0)
+        if (state == LobberState.WELCOME_PLAYER || state == LobberState.WAITING_FOR_OPPONENT)
         {
-            currentOpponentPos.setColumn(currentOpponentPos.getColumn() - 1);
+            if (currentOpponentPos.getColumn() > 0)
+            {
+                currentOpponentPos.setColumn(currentOpponentPos.getColumn() - 1);
+            }
+            shiftFocusToCell(currentOpponentPos);
         }
-        shiftFocusToCell(currentOpponentPos);
     }
 
     public void moveDown()
     {
-        if (currentOpponentPos.getRow() < LobberConstants.ROW_COUNT - 1)
+        if (state == LobberState.WELCOME_PLAYER || state == LobberState.WAITING_FOR_OPPONENT)
         {
-            currentOpponentPos.setRow(currentOpponentPos.getRow() + 1);
+            if (currentOpponentPos.getRow() < LobberConstants.ROW_COUNT - 1)
+            {
+                currentOpponentPos.setRow(currentOpponentPos.getRow() + 1);
+            }
+            shiftFocusToCell(currentOpponentPos);
         }
-        shiftFocusToCell(currentOpponentPos);
+
     }
 
     public void moveUp()
     {
-        if (currentOpponentPos.getRow() > 0)
+        if (state == LobberState.WELCOME_PLAYER || state == LobberState.WAITING_FOR_OPPONENT)
         {
-            currentOpponentPos.setRow(currentOpponentPos.getRow() - 1);
+            if (currentOpponentPos.getRow() > 0)
+            {
+                currentOpponentPos.setRow(currentOpponentPos.getRow() - 1);
+            }
+            shiftFocusToCell(currentOpponentPos);
         }
-        shiftFocusToCell(currentOpponentPos);
+
     }
 
     public void processSelection()
     {
-        if (playGrid[currentOpponentPos.getRow()][currentOpponentPos.getColumn()] == CellContent.NON_FILLED_CELL)
+        if (state == LobberState.WELCOME_PLAYER || state == LobberState.WAITING_FOR_OPPONENT)
         {
-            /*
-             * 1. Check if opponent won. If so, display message and give options
-             * 2. If not, player to find the best move and play it. Update the field.
-             * 3. Check if player won, display message and give options
-             * 4. Else, wait for opponent to play
-             */
-            selectCell(currentOpponentPos, CellContent.OPPONENT_CELL);
-            boolean opponentWinStatus = checkWinStatus(CellContent.OPPONENT_CELL, currentOpponentPos);
-            if (opponentWinStatus)
+            if (playGrid[currentOpponentPos.getRow()][currentOpponentPos.getColumn()] == CellContent.NON_FILLED_CELL)
             {
-                System.out.println("OPPONENT WON......");
-            } else
-            {
-                GridPosition playerPosition = getBestMove();
-                selectCell(playerPosition, CellContent.PLAYER_CELL);
-                boolean playerWinStatus = checkWinStatus(CellContent.PLAYER_CELL, playerPosition);
-                if (playerWinStatus)
+                /*
+                 * 1. Check if opponent won. If so, display message and give options
+                 * 2. If not, player to find the best move and play it. Update the field.
+                 * 3. Check if player won, display message and give options
+                 * 4. Else, wait for opponent to play
+                 */
+                selectCell(currentOpponentPos, CellContent.OPPONENT_CELL);
+                boolean opponentWinStatus = checkWinStatus(CellContent.OPPONENT_CELL, currentOpponentPos);
+                if (opponentWinStatus)
                 {
-                    System.out.println("PLAYER WON......");
+                    displayStatus(LobberState.OPPONENT_WON);
+                    System.out.println("OPPONENT WON......");
+                } else
+                {
+                    if (checkDrawnCondition())
+                    {
+                        displayStatus(LobberState.GAME_DRAWN);
+                    } else
+                    {
+                        displayStatus(LobberState.PLAYER_THINKING);
+                        GridPosition playerPosition = getBestMove();
+                        selectCell(playerPosition, CellContent.PLAYER_CELL);
+                        boolean playerWinStatus = checkWinStatus(CellContent.PLAYER_CELL, playerPosition);
+                        if (playerWinStatus)
+                        {
+                            displayStatus(LobberState.PLAYER_WON);
+                            System.out.println("PLAYER WON......");
+                        } else
+                        {
+                            if (checkDrawnCondition())
+                            {
+                                displayStatus(LobberState.GAME_DRAWN);
+                            } else
+                            {
+                                displayStatus(LobberState.WAITING_FOR_OPPONENT);
+                            }
+
+                        }
+                    }
                 }
             }
+            checkDrawnCondition();
         }
     }
 
@@ -107,22 +146,54 @@ public class LobberModel implements IGridModel
         view.shiftFocusToCell(position);
     }
 
-    private void updateLobberStatus(int lobberStatus)
-    {
-        view.updateLobberStatus(lobberStatus);
-    }
-
-    private void selectCell (GridPosition position, byte cellValue)
+    private void selectCell(GridPosition position, byte cellValue)
     {
         playGrid[position.getRow()][position.getColumn()] = cellValue;
         view.selectCell(position, cellValue);
         logic.updateBoundary(position);
     }
-    
-    
 
     private boolean checkWinStatus(byte playerToCheck, GridPosition positionToCheck)
     {
         return (logic.testWin(playGrid, positionToCheck) == playerToCheck);
+    }
+
+    private void displayStatus(int status)
+    {
+        this.state = status;
+        view.displayStatus(status);
+    }
+
+    public void reset()
+    {
+        playGrid = new byte[LobberConstants.ROW_COUNT][LobberConstants.COLUMN_COUNT];
+        view.reset();
+        logic.reset();
+        currentOpponentPos = new GridPosition(LobberConstants.ROW_COUNT / 2, LobberConstants.COLUMN_COUNT / 2);
+        shiftFocusToCell(currentOpponentPos);
+        displayStatus(LobberState.WELCOME_PLAYER);
+
+    }
+
+    private boolean checkDrawnCondition()
+    {
+        int status = LobberState.GAME_DRAWN;
+        mainloop:
+        for (int i = 0; i < playGrid.length; i++)
+        {
+            for (int j = 0; j < playGrid[i].length; j++)
+            {
+                if (playGrid[i][j] == CellContent.NON_FILLED_CELL)
+                {
+                    status = LobberState.WAITING_FOR_OPPONENT;
+                    break mainloop;
+                }
+            }
+        }
+        if (status == LobberState.GAME_DRAWN)
+        {
+            return true;
+        }
+        return false;
     }
 }
