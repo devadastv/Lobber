@@ -6,8 +6,11 @@ package com.dstvo.lobber.view;
 
 import com.dstvo.lobber.model.GridPosition;
 import com.dstvo.lobber.LobberConstants;
+import com.dstvo.lobber.model.LobberState;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Frame;
+import java.awt.Label;
 import java.awt.event.KeyListener;
 
 /**
@@ -16,81 +19,57 @@ import java.awt.event.KeyListener;
  */
 public class LobberView extends Frame
 {
-    LobberGrid grid;
+    private LobberGrid grid;
+    private Label statusText;
+    private KeyListener listener;
 
     public void initGui()
     {
         this.setBounds(LobberConstants.APP_X_POS, LobberConstants.APP_Y_POS,
                 LobberConstants.APP_WIDTH, LobberConstants.APP_HEIGHT);
         this.setBackground(Color.black);
+        Container localContainer = new Container();
+        localContainer.setBounds(getBounds());
         createLobberGrid();
-//        this.setResizable(false);
-        this.setVisible(true);
-        this.requestFocus();
+        createStatusDisplay();
+        localContainer.add(grid);
+        localContainer.add(statusText);
+        this.add(localContainer);
+        this.setResizable(false);
+        
     }
 
-//
-//    public void displayPlayField(byte[][] playGrid, GridPosition currentOpponentPosition)
-//    {
-//        StringBuffer buffer = new StringBuffer();
-//        for (int i = 0; i < playGrid.length; i++)
-//        {
-//            if (buffer.length() > 0)
-//            {
-//                buffer.delete(0, buffer.length());
-//            }
-//            byte[] bs = playGrid[i];
-//            for (int j = 0; j < bs.length; j++)
-//            {
-//                byte b = bs[j];
-//                buffer.append(b);
-//                if (i == currentOpponentPosition.row && j == currentOpponentPosition.column)
-//                {
-//                    buffer.append("*  ");
-//                } else
-//                {
-//                    buffer.append("   ");
-//                }
-//            }
-//            System.out.println(buffer.toString());
-//        }
-//    }
-
-//    public void updateField(byte[][] playGrid, GridPosition currentOpponentPosition, GridPosition lastPlayerPosition, GridPosition lastOpponentPosition)
-//    {
-//        grid.updateCells(playGrid, currentOpponentPosition, lastPlayerPosition, lastOpponentPosition);
-//    }
 
     public void setKeyListener(KeyListener keyListener)
     {
-        this.addKeyListener(keyListener);
+        this.listener = keyListener;
     }
 
     private void createLobberGrid()
     {
         grid = new LobberGrid();
-//        grid.setBounds(LobberConstants.GRID_LEFT_OFFSET,
-//                LobberConstants.GRID_TOP_OFFSET,
-//                getWidth() - (LobberConstants.GRID_LEFT_OFFSET + LobberConstants.GRID_RIGHT_OFFSET),
-//                getHeight() - (LobberConstants.GRID_TOP_OFFSET + LobberConstants.GRID_BOTTOM_OFFSET));
-        
-        grid.setBounds(LobberConstants.GRID_X_POS, LobberConstants.GRID_Y_POS, LobberConstants.GRID_WIDTH, LobberConstants.GRID_HEIGHT);
-        this.add(grid);
+        grid.setBounds(LobberConstants.GRID_X_POS,
+                LobberConstants.GRID_Y_POS, LobberConstants.GRID_WIDTH, LobberConstants.GRID_HEIGHT);
         System.out.println("Frame Bounds is " + getBounds());
         System.out.println("Grid Bounds is " + grid.getBounds());
         grid.initializeCells();
         grid.setVisible(true);
-        
     }
+
+    private void createStatusDisplay()
+    {
+        statusText = new Label();
+        statusText.setBounds(LobberConstants.STATUS_X_POS, LobberConstants.STATUS_Y_POS,
+                LobberConstants.STATUS_WIDTH, LobberConstants.STATUS_HEIGHT);
+        statusText.setBackground(Color.white);
+        statusText.setAlignment(Label.CENTER);
+        statusText.setVisible(true);
+    }
+
 
     public void shiftFocusToCell(GridPosition position)
     {
         grid.shiftFocusToCell(position);
-    }
-
-    public void updateLobberStatus(int lobberStatus)
-    {
-        // TODO
     }
 
     public void selectCell(GridPosition position, byte cellValue)
@@ -98,4 +77,46 @@ public class LobberView extends Frame
         grid.selectCell(position, cellValue);
     }
 
+    public void displayStatus(int status)
+    {
+        String statusMessage = LobberConstants.WAITING_FOR_OPPONENT_STATUS_MESSAGE;
+        switch (status)
+        {
+            case LobberState.OPPONENT_WON:
+                statusText.setBackground(Color.green);
+                statusMessage = LobberConstants.OPPONENT_WON_STATUS_MESSAGE;
+                break;
+            case LobberState.PLAYER_THINKING:
+                statusMessage = LobberConstants.PLAYER_THINKING_STATUS_MESSAGE;
+                break;
+            case LobberState.PLAYER_WON:
+                statusText.setBackground(Color.red);
+                statusMessage = LobberConstants.PLAYER_WON_STATUS_MESSAGE;
+                break;
+            case LobberState.WAITING_FOR_OPPONENT:
+                statusMessage = LobberConstants.WAITING_FOR_OPPONENT_STATUS_MESSAGE;
+                break;
+            case LobberState.GAME_DRAWN:
+                statusText.setBackground(Color.yellow);
+                statusMessage = LobberConstants.GAME_DRAWN_STATUS_MESSAGE;
+                break;
+            case LobberState.WELCOME_PLAYER:
+                statusMessage = LobberConstants.WELCOME_AND_WAIT_STATUS_MESSAGE;
+                break;
+        }
+        statusText.setText(statusMessage);
+    }
+
+    public void reset()
+    {
+        statusText.setBackground(Color.white);
+        grid.reset();
+    }
+
+    public void showUI()
+    {
+        this.setVisible(true);
+        this.addKeyListener(listener);
+        this.requestFocus();
+    }
 }
