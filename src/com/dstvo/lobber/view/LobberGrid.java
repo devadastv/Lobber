@@ -23,12 +23,14 @@ public class LobberGrid extends Container
     void initializeCells()
     {
         cells = new LobberCell[LobberConstants.ROW_COUNT][LobberConstants.COLUMN_COUNT];
-        int cellWidth = getWidth() / LobberConstants.ROW_COUNT;
-        int cellHeight = getHeight() / LobberConstants.COLUMN_COUNT;
+        int cellWidth = getWidth() / LobberConstants.COLUMN_COUNT;
+        int cellHeight = getHeight() / LobberConstants.ROW_COUNT;
         int cellY_Pos, cellX_Pos;
+        System.out.println("cells.length = " + cells.length);
         for (int row = 0; row < cells.length; row++) //Each row
         {
             cellY_Pos = cellHeight * row;
+            System.out.println("cells[row].length = " + cells[row].length);
             for (int column = 0; column < cells[row].length; column++)
             {
                 cellX_Pos = cellWidth * column;
