@@ -7,7 +7,6 @@ package com.dstvo.lobber.model;
 import com.dstvo.lobber.LobberConstants;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Vector;
 
 /**
  *
@@ -28,7 +27,6 @@ public class LobberLogic
         bottomBounadry = 0;
         rightBoundary = 0;
     }
-
 
     public byte testWin(byte[][] playGrid, GridPosition position)
     {
@@ -198,17 +196,17 @@ public class LobberLogic
                 if (playGrid[row][column] == CellContent.NON_FILLED_CELL)
                 {
                     GridPosition position = new GridPosition(row, column);
-                    int score = getRating(position, playGrid);
-                    
-                    if (score > bestRating)
+                    System.out.println("Inside getpositionRating for " + position);
+                    int positionRating = getPositionRating(position, playGrid);
+                    if (positionRating > bestRating)
                     {
-                        bestRating = score;
+                        bestRating = positionRating;
                         bestPositionList.clear();
                         bestPositionList.add(position);
-                        System.out.println("For position " + position + ", score is " + score + " white bestScore WAS " + bestRating);
-                    } else if (score == bestRating)
+                        System.out.println("For position " + position + ", score is " + positionRating + " white bestScore WAS " + bestRating);
+                    } else if (positionRating == bestRating)
                     {
-                        System.out.println("For position " + position + ", score is " + score + " same as best score");
+                        System.out.println("For position " + position + ", score is " + positionRating + " same as best score");
                         bestPositionList.add(position);
                     }
                 }
@@ -218,7 +216,7 @@ public class LobberLogic
         return (GridPosition) bestPositionList.get(0);
     }
 
-    int getRating(GridPosition position, byte[][] playGrid)
+    int getPositionRating(GridPosition position, byte[][] playGrid)
     {
         int weightage[] = new int[4];
 
@@ -233,15 +231,9 @@ public class LobberLogic
         {
             //Populate line for that cell in each direction
             int line[] = createLine(playGrid, position, direction);
-            int playerScore = chipsCount(line, CellContent.PLAYER_CELL) + 1;
-            int opponentScore = chipsCount(line, CellContent.OPPONENT_CELL);
-            if (playerScore > opponentScore)
-            {
-                weightage[direction] = playerScore;
-            } else
-            {
-                weightage[direction] = opponentScore;
-            }
+            int playerLineScore = getBestScoreFromLine(line, CellContent.PLAYER_CELL) + 1;
+            int opponentLineScore = getBestScoreFromLine(line, CellContent.OPPONENT_CELL);
+            weightage[direction] = playerLineScore > opponentLineScore ? playerLineScore : opponentLineScore;
         }
 
         /*
@@ -249,84 +241,91 @@ public class LobberLogic
          * Now sort this from max to min within the array so that the cumulative
          * weightage for the selected cell can be calculated
          */
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = i + 1; j < 4; j++)
-            {
-                if (weightage[i] < weightage[j])
-                {
-                    int temp = weightage[i];
-                    weightage[i] = weightage[j];
-                    weightage[j] = temp;
-                }
-            }
-        }
-//        Arrays.sort(weightage);
-//        return weightage[3] * 64 + weightage[2] * 16 + weightage[1] * 4 + weightage[0];
+        Arrays.sort(weightage);
         /*
          * Some weightage value is given to each direction weightages to get the final rating
          * for the selected cell
          */
-        return weightage[0] * 64 + weightage[1] * 16 + weightage[2] * 4 + weightage[3];
+        return weightage[3] * 1000 + weightage[2] * 100 + weightage[1] * 10 + weightage[0];
     }
 
-    int chipsCount(int line[], int player)
+    int getBestScoreFromLine(int line[], int playerCellValue)
     {
-        int best = 0;
-        for (int i = 1; i < 6; i++)
+        int bestScore = 0;
+
+        // Iterate thru the line of length 10 in sections of 4. (ie, first section is 1-4,
+        // then 2-5 then 3-6 and so on). Get the best scorer in this set of 4 based on below criterias.
+        // Note that first one and last one in line are not counted for creating row
+        for (int sectionStart = 1; sectionStart < (LobberConstants.COUNT_FOR_WIN + 1); sectionStart++) // N + 1
         {
-            int last;
-            int gaps;
-            int isNear;
-            int first = last = gaps = isNear = 0;
-            int s;
-            for (s = i; gaps < 4 && s < i + 4; s++)
+            int firstOccurance = 0;
+            int lastOccurance = 0;
+            int gaps = 0;
+            int isNear = 0;
+            for (int i = sectionStart; i < sectionStart + (LobberConstants.COUNT_FOR_WIN - 1); i++)
             {
-                if (line[s] == 0)
+                // Add one gap for each non_filled cell
+                if (line[i] == CellContent.NON_FILLED_CELL)
                 {
                     gaps++;
-                } else if (line[s] != player)
+                } // If there is an opponent cell or out_of_bounds cell in the section, make the gap as 4.
+                // This reduces the score
+                else if (line[i] != playerCellValue)
                 {
-                    gaps = 4;
-                } else
+                    gaps = (LobberConstants.COUNT_FOR_WIN - 1);
+                    break;
+                } // In case of the cell is the current player's cell, populate last and first occurance in section
+                // Also check if the cell in the line near to the cell under test is player's own cell
+                else
                 {
-                    last = s;
-                    if (first == 0)
+                    firstOccurance = i;
+                    if (lastOccurance == 0)
                     {
-                        first = s;
+                        lastOccurance = i;
                     }
-                    isNear = isNear == 0 && s != 4 && s != 5 ? 0 : 1;
+                    isNear = ((i == (LobberConstants.COUNT_FOR_WIN - 1))
+                            || (i == LobberConstants.COUNT_FOR_WIN)) ? 1 : 0;
                 }
             }
 
             //More value if gaps are less with no opponent cells in the 4 cells selected earlier
-            s = (4 - gaps) * (4 - gaps);
+            int score = ((LobberConstants.COUNT_FOR_WIN - 1) - gaps) * ((LobberConstants.COUNT_FOR_WIN - 1) - gaps);
 
             // +1 if the player's cells are adjacent in the 4 cells selected earlier
-            if (last - first < 4 - gaps)
+            if (firstOccurance - lastOccurance < (LobberConstants.COUNT_FOR_WIN - 1) - gaps) //N-1
             {
-                s++;
+                score++;
             }
 
             //+1 if the cell to be played is near to any of his own cells
             // cells 4 and 5 in the line comes adjacent to the selected cell
             if (isNear != 0)
             {
-                s++;
+                score++;
             }
 
             // +4 if the cells before and after the 4 earlier selected cells are either
             // the players own cell or empty
-            if ((line[i - 1] == 0 || line[i - 1] == player) && (line[i + 4] == 0 || line[i + 4] == player))
+            if ((line[sectionStart - 1] == 0
+                    || line[sectionStart - 1] == playerCellValue)
+                    && (line[sectionStart + (LobberConstants.COUNT_FOR_WIN - 1)] == 0
+                    || line[sectionStart + (LobberConstants.COUNT_FOR_WIN - 1)] == playerCellValue))
             {
-                s += 4;
+                score += (LobberConstants.COUNT_FOR_WIN - 1);
             }
-            if (s > best)
+            if (score > bestScore)
             {
-                best = s;
+                bestScore = score;
             }
         }
+        return bestScore;
+    }
 
-        return best;
+    void reset()
+    {
+        topBoundary = LobberConstants.ROW_COUNT - 1;
+        leftBoundary = LobberConstants.COLUMN_COUNT - 1;
+        bottomBounadry = 0;
+        rightBoundary = 0;
     }
 }
