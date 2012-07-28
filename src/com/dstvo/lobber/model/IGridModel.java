@@ -20,5 +20,7 @@ public interface IGridModel
 
     void processSelection();
 
-    void initialize();
+    void start();
+
+    void reset();
 }
