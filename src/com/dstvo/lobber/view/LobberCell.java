@@ -6,67 +6,108 @@ package com.dstvo.lobber.view;
 
 import com.dstvo.lobber.LobberConstants;
 import com.dstvo.lobber.model.CellContent;
-import java.awt.Color;
-import java.awt.Label;
+import com.dstvo.lobber.util.ImageCache;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Image;
 
 /**
  *
- * @author Devadas.Vijayan
+ * @author user
  */
-public class LobberCell extends Label
+public class LobberCell extends Component
 {
+    private Image image;
     boolean isHighlighted;
     boolean isSelected;
     int cellValue; //CellContent
-    Color cellColor; // Original bg Color
 
     public LobberCell()
     {
-        cellValue = CellContent.NON_FILLED_CELL;
+        image = ImageCache.getImage(LobberConstants.NO_FILLED_NO_HIGHLIGHT);
     }
 
-    public void setBackground(Color backgroundColor)
-    {
-        cellColor = backgroundColor;
-        super.setBackground(backgroundColor);
-    }
-
-    public void setHighlighted(boolean highlightStatus)
+    void setHighlighted(boolean highlightStatus)
     {
         this.isHighlighted = highlightStatus;
-        if (isHighlighted)
-        {
-            super.setBackground(LobberConstants.FOCUSED_CELL_COLOR);
-        } else
-        {
-            super.setBackground(cellColor);
-        }
+        updateImage();
+        this.repaint();
     }
 
-    public void setSelected(boolean selectStatus)
+    void setSelected(boolean selectStatus)
     {
         this.isSelected = selectStatus;
-        if (cellValue != CellContent.NON_FILLED_CELL)
-        {
-            if (isSelected)
-            {
-                setText("*" + cellValue);
-            } else
-            {
-                setText("" + cellValue);
-            }
-        }
+        updateImage();
+        this.repaint();
     }
 
     public void setCellValue(int cellValue)
     {
         this.cellValue = cellValue;
-        if (cellValue != CellContent.NON_FILLED_CELL)
+        updateImage();
+        this.repaint();
+    }
+
+    public void paint(Graphics g)
+    {
+        g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+        super.paint(g);
+    }
+
+    private void updateImage()
+    {
+        if (isHighlighted)
         {
-            setText("" + cellValue);
+            switch (cellValue)
+            {
+                case CellContent.PLAYER_CELL:
+                    if (isSelected)
+                    {
+                        image = ImageCache.getImage(LobberConstants.PLAYER_1_HIGHLIGHTED_LAST_SELECTED);
+                    } else
+                    {
+                        image = ImageCache.getImage(LobberConstants.PLAYER_1_HIGHLIGHTED);
+                    }
+                    break;
+                case CellContent.OPPONENT_CELL:
+                    if (isSelected)
+                    {
+                        image = ImageCache.getImage(LobberConstants.PLAYER_2_HIGHLIGHTED_LAST_SELECTED);
+                    } else
+                    {
+                        image = ImageCache.getImage(LobberConstants.PLAYER_2_HIGHLIGHTED);
+                    }
+                    break;
+                case CellContent.NON_FILLED_CELL:
+                    image = ImageCache.getImage(LobberConstants.NO_FILLED_HIGHLIGHTED);
+                    break;
+            }
         } else
         {
-            setText("");
+            switch (cellValue)
+            {
+                case CellContent.PLAYER_CELL:
+                    if (isSelected)
+                    {
+                        image = ImageCache.getImage(LobberConstants.PLAYER_1_NO_HIGHLIGHT_LAST_SELECTED);
+                    } else
+                    {
+                        image = ImageCache.getImage(LobberConstants.PLAYER_1_NO_HIGHLIGHT);
+                    }
+                    break;
+                case CellContent.OPPONENT_CELL:
+                    if (isSelected)
+                    {
+                        image = ImageCache.getImage(LobberConstants.PLAYER_2_NO_HIGHLIGHT_LAST_SELECTED);
+                    } else
+                    {
+                        image = ImageCache.getImage(LobberConstants.PLAYER_2_NO_HIGHLIGHT);
+                    }
+                    break;
+                case CellContent.NON_FILLED_CELL:
+                    image = ImageCache.getImage(LobberConstants.NO_FILLED_NO_HIGHLIGHT);
+                    break;
+            }
         }
     }
 }
