@@ -17,7 +17,7 @@ public interface LobberConstants
     int COLUMN_COUNT = 16;
     
     // Win criteria
-    int COUNT_FOR_WIN = 4;
+    int COUNT_FOR_WIN = 5;
     
     // Location of the app UI
     int APP_X_POS = 0;
@@ -44,6 +44,19 @@ public interface LobberConstants
     String PLAYER_THINKING_STATUS_MESSAGE = "THINKING FOR THE MOVE...";
     String WELCOME_AND_WAIT_STATUS_MESSAGE = "WELCOME. PLEASE PLAY YOUR TURN...";
     String WAITING_FOR_OPPONENT_STATUS_MESSAGE = "WAITING FOR YOU TO PLAY...";
-    
+
+    // Images to show in cells on each scenarios
+    String NO_FILLED_NO_HIGHLIGHT = "resources/NF_HN.png";
+    String NO_FILLED_HIGHLIGHTED = "resources/NF_HY.png";
+    String PLAYER_1_NO_HIGHLIGHT = "resources/P1_NS_HN.png";
+    String PLAYER_1_NO_HIGHLIGHT_LAST_SELECTED = "resources/P1_LS_HN.png";
+    String PLAYER_1_HIGHLIGHTED = "resources/P1_NS_HY.png";
+    String PLAYER_1_HIGHLIGHTED_LAST_SELECTED = "resources/P1_LS_HY.png";
+    String PLAYER_2_NO_HIGHLIGHT = "resources/P2_NS_HN.png";
+    String PLAYER_2_NO_HIGHLIGHT_LAST_SELECTED = "resources/P2_LS_HN.png";
+    String PLAYER_2_HIGHLIGHTED = "resources/P2_NS_HY.png";
+    String PLAYER_2_HIGHLIGHTED_LAST_SELECTED = "resources/P2_LS_HY.png";
+
+
     Color FOCUSED_CELL_COLOR = Color.white;
 }
