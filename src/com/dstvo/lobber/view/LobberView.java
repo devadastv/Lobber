@@ -7,9 +7,11 @@ package com.dstvo.lobber.view;
 import com.dstvo.lobber.model.GridPosition;
 import com.dstvo.lobber.LobberConstants;
 import com.dstvo.lobber.model.LobberState;
+import com.dstvo.lobber.util.ImageCache;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Frame;
+import java.awt.Graphics;
 import java.awt.Label;
 import java.awt.event.KeyListener;
 
@@ -28,7 +30,15 @@ public class LobberView extends Frame
         this.setBounds(LobberConstants.APP_X_POS, LobberConstants.APP_Y_POS,
                 LobberConstants.APP_WIDTH, LobberConstants.APP_HEIGHT);
         this.setBackground(Color.black);
-        Container localContainer = new Container();
+        Container localContainer = new Container() {
+
+            public void paint(Graphics g)
+            {
+                g.drawImage(ImageCache.getImage("resources/wallpaper-23.jpg"), 0, 0, LobberConstants.APP_WIDTH, LobberConstants.APP_HEIGHT, null);
+                super.paint(g);
+            }
+
+        };
         localContainer.setBounds(getBounds());
         createLobberGrid();
         createStatusDisplay();
