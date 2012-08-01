@@ -8,6 +8,7 @@ import com.dstvo.lobber.model.GridPosition;
 import com.dstvo.lobber.LobberConstants;
 import com.dstvo.lobber.model.LobberState;
 import com.dstvo.lobber.util.ImageCache;
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Frame;
@@ -22,28 +23,29 @@ import java.awt.event.KeyListener;
 public class LobberView extends Frame
 {
     private LobberGrid grid;
-    private Label statusText;
     private KeyListener listener;
+    private ImageBox statusBox;
+    private ImageBox helpText;
+    Container localContainer;
 
     public void initGui()
     {
         this.setBounds(LobberConstants.APP_X_POS, LobberConstants.APP_Y_POS,
                 LobberConstants.APP_WIDTH, LobberConstants.APP_HEIGHT);
         this.setBackground(Color.black);
-        Container localContainer = new Container() {
-
+        localContainer = new Container() {
             public void paint(Graphics g)
             {
-                g.drawImage(ImageCache.getImage("resources/wallpaper-23.jpg"), 0, 0, LobberConstants.APP_WIDTH, LobberConstants.APP_HEIGHT, null);
+                g.drawImage(ImageCache.getImage("resources/Background.png"), 0, 0,
+                        LobberConstants.APP_WIDTH, LobberConstants.APP_HEIGHT, null);
                 super.paint(g);
             }
-
         };
         localContainer.setBounds(getBounds());
         createLobberGrid();
         createStatusDisplay();
-        localContainer.add(grid);
-        localContainer.add(statusText);
+        createHelpDisplay();
+        createAdvtSlideShow();
         this.add(localContainer);
         this.setResizable(false);
         
@@ -63,19 +65,18 @@ public class LobberView extends Frame
         System.out.println("Frame Bounds is " + getBounds());
         System.out.println("Grid Bounds is " + grid.getBounds());
         grid.initializeCells();
+        localContainer.add(grid);
         grid.setVisible(true);
     }
 
     private void createStatusDisplay()
     {
-        statusText = new Label();
-        statusText.setBounds(LobberConstants.STATUS_X_POS, LobberConstants.STATUS_Y_POS,
+        statusBox = new ImageBox();
+        statusBox.setBounds(LobberConstants.STATUS_X_POS, LobberConstants.STATUS_Y_POS,
                 LobberConstants.STATUS_WIDTH, LobberConstants.STATUS_HEIGHT);
-        statusText.setBackground(Color.white);
-        statusText.setAlignment(Label.CENTER);
-        statusText.setVisible(true);
+        localContainer.add(statusBox);
+        statusBox.setVisible(true);
     }
-
 
     public void shiftFocusToCell(GridPosition position)
     {
@@ -89,38 +90,33 @@ public class LobberView extends Frame
 
     public void displayStatus(int status)
     {
-        String statusMessage = LobberConstants.WAITING_FOR_OPPONENT_STATUS_MESSAGE;
         switch (status)
         {
             case LobberState.OPPONENT_WON:
-                statusText.setBackground(Color.green);
-                statusMessage = LobberConstants.OPPONENT_WON_STATUS_MESSAGE;
+                statusBox.setImage(LobberConstants.OPPONENT_WON_STATUS_IMAGE);
                 break;
             case LobberState.PLAYER_THINKING:
-                statusMessage = LobberConstants.PLAYER_THINKING_STATUS_MESSAGE;
+                statusBox.setImage(LobberConstants.PLAYER_THINKING_STATUS_IMAGE);
                 break;
             case LobberState.PLAYER_WON:
-                statusText.setBackground(Color.red);
-                statusMessage = LobberConstants.PLAYER_WON_STATUS_MESSAGE;
+                statusBox.setImage(LobberConstants.PLAYER_WON_STATUS_IMAGE);
                 break;
             case LobberState.WAITING_FOR_OPPONENT:
-                statusMessage = LobberConstants.WAITING_FOR_OPPONENT_STATUS_MESSAGE;
+                statusBox.setImage(LobberConstants.WAITING_FOR_OPPONENT_STATUS_IMAGE);
                 break;
             case LobberState.GAME_DRAWN:
-                statusText.setBackground(Color.yellow);
-                statusMessage = LobberConstants.GAME_DRAWN_STATUS_MESSAGE;
+                statusBox.setImage(LobberConstants.GAME_DRAWN_STATUS_IMAGE);
                 break;
             case LobberState.WELCOME_PLAYER:
-                statusMessage = LobberConstants.WELCOME_AND_WAIT_STATUS_MESSAGE;
+                statusBox.setImage(LobberConstants.WELCOME_AND_WAIT_STATUS_IMAGE);
                 break;
         }
-        statusText.setText(statusMessage);
     }
 
-    public void reset()
+    public void reset(boolean difficultyLevelChange)
     {
-        statusText.setBackground(Color.white);
-        grid.reset();
+        statusBox.setImage(LobberConstants.WELCOME_AND_WAIT_STATUS_IMAGE);
+        grid.reset(difficultyLevelChange);
     }
 
     public void showUI()
@@ -128,5 +124,27 @@ public class LobberView extends Frame
         this.setVisible(true);
         this.addKeyListener(listener);
         this.requestFocus();
+    }
+
+    private void createHelpDisplay()
+    {
+        helpText = new ImageBox();
+        helpText.setBounds(LobberConstants.HELPTEXT_X_POS, LobberConstants.HELPTEXT_Y_POS,
+                LobberConstants.HELPTEXT_WIDTH, LobberConstants.HELPTEXT_HEIGHT);
+        helpText.setImage(LobberConstants.HELP_IMAGE_NORMAL);
+        localContainer.add(helpText);
+        helpText.setVisible(true);
+    }
+
+    private void createAdvtSlideShow()
+    {
+        SlideshowGadget slideShow = new SlideshowGadget();
+        slideShow.setBounds(LobberConstants.ADVT_X_POS, LobberConstants.ADVT_Y_POS,
+                LobberConstants.ADVT_WIDTH, LobberConstants.ADVT_HEIGHT);
+        slideShow.setDelay(10000);
+        slideShow.setSlides(LobberConstants.ADVT_SLIDESHOW_IMAGES);
+        localContainer.add(slideShow);
+        slideShow.startSlideShow();
+        slideShow.setVisible(true);
     }
 }

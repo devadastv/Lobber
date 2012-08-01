@@ -6,6 +6,7 @@ package com.dstvo.lobber.view;
 
 import com.dstvo.lobber.model.GridPosition;
 import com.dstvo.lobber.LobberConstants;
+import com.dstvo.lobber.LobberUtil;
 import com.dstvo.lobber.model.CellContent;
 import java.awt.Container;
 
@@ -22,9 +23,9 @@ public class LobberGrid extends Container
 
     void initializeCells()
     {
-        cells = new LobberCell[LobberConstants.ROW_COUNT][LobberConstants.COLUMN_COUNT];
-        int cellWidth = getWidth() / LobberConstants.COLUMN_COUNT;
-        int cellHeight = getHeight() / LobberConstants.ROW_COUNT;
+        cells = new LobberCell[LobberUtil.getRowCount()][LobberUtil.getColumnCount()];
+        int cellWidth = getWidth() / LobberUtil.getColumnCount();
+        int cellHeight = getHeight() / LobberUtil.getRowCount();
         int cellY_Pos, cellX_Pos;
         System.out.println("cells.length = " + cells.length);
         for (int row = 0; row < cells.length; row++) //Each row
@@ -79,16 +80,24 @@ public class LobberGrid extends Container
         }
     }
 
-    void reset()
+    void reset(boolean difficultyLevelChange)
     {
-        for (int row = 0; row < cells.length; row++)
+        if (difficultyLevelChange)
         {
-            for (int column = 0; column < cells[row].length; column++)
+            this.removeAll();
+            initializeCells();
+            repaint();
+        } else
+        {
+            for (int row = 0; row < cells.length; row++)
             {
-                LobberCell cell = cells[row][column];
-                cell.setCellValue(CellContent.NON_FILLED_CELL);
-                cell.setSelected(false);
-                cell.setHighlighted(false);
+                for (int column = 0; column < cells[row].length; column++)
+                {
+                    LobberCell cell = cells[row][column];
+                    cell.setCellValue(CellContent.NON_FILLED_CELL);
+                    cell.setSelected(false);
+                    cell.setHighlighted(false);
+                }
             }
         }
     }

@@ -51,7 +51,7 @@ public class LobberCell extends Component
     public void paint(Graphics g)
     {
         g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
-        super.paint(g);
+//        super.paint(g);
     }
 
     private void updateImage()
