@@ -5,6 +5,7 @@
 package com.dstvo.lobber.model;
 
 import com.dstvo.lobber.LobberConstants;
+import com.dstvo.lobber.LobberUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -22,8 +23,8 @@ public class LobberLogic
 
     public LobberLogic()
     {
-        topBoundary = LobberConstants.ROW_COUNT - 1;
-        leftBoundary = LobberConstants.COLUMN_COUNT - 1;
+        topBoundary = LobberUtil.getRowCount() - 1;
+        leftBoundary = LobberUtil.getColumnCount() - 1;
         bottomBounadry = 0;
         rightBoundary = 0;
     }
@@ -85,7 +86,7 @@ public class LobberLogic
         {
             row -= rowDiff;
             column -= colDiff;
-            if (row >= 0 && row < LobberConstants.ROW_COUNT && column >= 0 && column < LobberConstants.COLUMN_COUNT)
+            if (row >= 0 && row < LobberUtil.getRowCount() && column >= 0 && column < LobberUtil.getColumnCount())
             {
                 line[LobberConstants.COUNT_FOR_WIN - (i + 1)] = playGrid[row][column];
             } else
@@ -101,7 +102,7 @@ public class LobberLogic
         {
             row += rowDiff;
             column += colDiff;
-            if (row >= 0 && row < LobberConstants.ROW_COUNT && column >= 0 && column < LobberConstants.COLUMN_COUNT)
+            if (row >= 0 && row < LobberUtil.getRowCount() && column >= 0 && column < LobberUtil.getColumnCount())
             {
                 line[LobberConstants.COUNT_FOR_WIN + i] = playGrid[row][column];
             } else
@@ -149,9 +150,9 @@ public class LobberLogic
         if (position.getRow() >= bottomBounadry)
         {
             bottomBounadry = position.getRow() + 1;
-            if (bottomBounadry >= LobberConstants.ROW_COUNT)
+            if (bottomBounadry >= LobberUtil.getRowCount())
             {
-                bottomBounadry = LobberConstants.ROW_COUNT - 1;
+                bottomBounadry = LobberUtil.getRowCount() - 1;
             }
         }
     }
@@ -173,9 +174,9 @@ public class LobberLogic
         if (position.getColumn() >= rightBoundary)
         {
             rightBoundary = position.getColumn() + 1;
-            if (rightBoundary >= LobberConstants.COLUMN_COUNT)
+            if (rightBoundary >= LobberUtil.getColumnCount())
             {
-                rightBoundary = LobberConstants.COLUMN_COUNT - 1;
+                rightBoundary = LobberUtil.getColumnCount() - 1;
             }
         }
     }
@@ -323,8 +324,8 @@ public class LobberLogic
 
     void reset()
     {
-        topBoundary = LobberConstants.ROW_COUNT - 1;
-        leftBoundary = LobberConstants.COLUMN_COUNT - 1;
+        topBoundary = LobberUtil.getRowCount() - 1;
+        leftBoundary = LobberUtil.getColumnCount() - 1;
         bottomBounadry = 0;
         rightBoundary = 0;
     }

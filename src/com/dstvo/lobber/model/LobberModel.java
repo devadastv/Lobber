@@ -5,13 +5,14 @@
 package com.dstvo.lobber.model;
 
 import com.dstvo.lobber.LobberConstants;
+import com.dstvo.lobber.LobberUtil;
 import com.dstvo.lobber.view.LobberView;
 
 /**
  *
  * @author user
  */
-public class LobberModel implements IGridModel
+public class LobberModel
 {
     LobberView view;
     byte[][] playGrid;
@@ -23,8 +24,8 @@ public class LobberModel implements IGridModel
     {
         this.view = view;
         view.initGui();
-        playGrid = new byte[LobberConstants.ROW_COUNT][LobberConstants.COLUMN_COUNT];
-        currentOpponentPos = new GridPosition(LobberConstants.ROW_COUNT / 2, LobberConstants.COLUMN_COUNT / 2);
+        playGrid = new byte[LobberUtil.getRowCount()][LobberUtil.getColumnCount()];
+        currentOpponentPos = new GridPosition(LobberUtil.getRowCount() / 2, LobberUtil.getColumnCount() / 2);
     }
 
     public void start()
@@ -38,7 +39,7 @@ public class LobberModel implements IGridModel
     {
         if (state == LobberState.WELCOME_PLAYER || state == LobberState.WAITING_FOR_OPPONENT)
         {
-            if (currentOpponentPos.getColumn() < LobberConstants.COLUMN_COUNT - 1)
+            if (currentOpponentPos.getColumn() < LobberUtil.getColumnCount() - 1)
             {
                 currentOpponentPos.setColumn(currentOpponentPos.getColumn() + 1);
             }
@@ -62,7 +63,7 @@ public class LobberModel implements IGridModel
     {
         if (state == LobberState.WELCOME_PLAYER || state == LobberState.WAITING_FOR_OPPONENT)
         {
-            if (currentOpponentPos.getRow() < LobberConstants.ROW_COUNT - 1)
+            if (currentOpponentPos.getRow() < LobberUtil.getRowCount() - 1)
             {
                 currentOpponentPos.setRow(currentOpponentPos.getRow() + 1);
             }
@@ -164,15 +165,14 @@ public class LobberModel implements IGridModel
         view.displayStatus(status);
     }
 
-    public void reset()
+    public void reset(boolean difficultyLevelChange)
     {
-        playGrid = new byte[LobberConstants.ROW_COUNT][LobberConstants.COLUMN_COUNT];
-        view.reset();
+        playGrid = new byte[LobberUtil.getRowCount()][LobberUtil.getColumnCount()];
+        view.reset(difficultyLevelChange);
         logic.reset();
-        currentOpponentPos = new GridPosition(LobberConstants.ROW_COUNT / 2, LobberConstants.COLUMN_COUNT / 2);
+        currentOpponentPos = new GridPosition(LobberUtil.getRowCount() / 2, LobberUtil.getColumnCount() / 2);
         shiftFocusToCell(currentOpponentPos);
         displayStatus(LobberState.WELCOME_PLAYER);
-
     }
 
     private boolean checkDrawnCondition()
