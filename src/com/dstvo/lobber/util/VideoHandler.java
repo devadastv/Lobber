@@ -65,12 +65,13 @@ public class VideoHandler
 
     private static Rectangle getResolutionResolvedRect(Rectangle newVideoBounds)
     {
-        int x_factor = RESOLVE_RESOLUTION ? (1280 / 720) : 1;
-        int y_factor = RESOLVE_RESOLUTION ? (720 / 576) : 1;
-        int x = newVideoBounds.x * x_factor;
-        int y = newVideoBounds.y * y_factor;
-        int width = newVideoBounds.width * x_factor;
-        int height = newVideoBounds.height * y_factor;
+        float x_factor = RESOLVE_RESOLUTION ? ((float)720 / 1280) : 1;
+        float y_factor = RESOLVE_RESOLUTION ? ((float)576 / 720) : 1;
+        System.out.println("x_factor = " + x_factor);
+        int x = (int) (newVideoBounds.x * x_factor);
+        int y = (int) (newVideoBounds.y * y_factor);
+        int width = (int) (newVideoBounds.width * x_factor);
+        int height = (int) (newVideoBounds.height * y_factor);
         return new Rectangle(x, y, width, height);
     }
 }
