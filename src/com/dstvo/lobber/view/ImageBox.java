@@ -30,8 +30,6 @@ public class ImageBox extends Component
         if (null != image)
         {
             g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
-            g.setColor(Color.red);
-            g.fillRect(getX(), getY(), getWidth(), getHeight());
         }
     }
 }
