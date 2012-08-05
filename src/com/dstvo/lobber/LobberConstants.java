@@ -58,13 +58,20 @@ public interface LobberConstants
     int APP_TITLE_HEIGHT = 75;
     
     // Location of the lobber grid within UI
-    int ADVT_X_POS = 950;
+    int ADVT_X_POS = 933;
     int ADVT_Y_POS = 300;
-    int ADVT_WIDTH = 280;
+    int ADVT_WIDTH = 310;
     int ADVT_HEIGHT = 340;
 
     String APP_TITLE_IMAGE = "resources/AppTitle.png";
+	
+	// Location of the lobber grid within UI
+    int VIDEO_X_POS = 933;
+    int VIDEO_Y_POS = 50;
+    int VIDEO_WIDTH = 310;
+    int VIDEO_HEIGHT = 174;
 
+    // Images for status display
     String PLAYER_WON_STATUS_IMAGE = "resources/status_icons/Status_Lost.png";
     String OPPONENT_WON_STATUS_IMAGE = "resources/status_icons/Status_Won.png";
     String GAME_DRAWN_STATUS_IMAGE = "resources/status_icons/Status_Draw.png";
@@ -97,5 +104,4 @@ public interface LobberConstants
         "resources/advt_slideshow/ad7.png", "resources/advt_slideshow/ad8.png",
         "resources/advt_slideshow/ad9.png", "resources/advt_slideshow/ad10.png"
     };
-    Color FOCUSED_CELL_COLOR = Color.white;
 }

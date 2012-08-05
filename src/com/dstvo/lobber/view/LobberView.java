@@ -8,12 +8,14 @@ import com.dstvo.lobber.model.GridPosition;
 import com.dstvo.lobber.LobberConstants;
 import com.dstvo.lobber.model.LobberState;
 import com.dstvo.lobber.util.ImageCache;
+import com.dstvo.lobber.util.VideoHandler;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Label;
+import java.awt.Rectangle;
 import java.awt.event.KeyListener;
 
 /**
@@ -50,7 +52,9 @@ public class LobberView extends Frame
         createAdvtSlideShow();
         this.add(localContainer);
         this.setResizable(false);
-        
+        VideoHandler.resizeVideo(new Rectangle(LobberConstants.VIDEO_X_POS,
+                LobberConstants.VIDEO_Y_POS, LobberConstants.VIDEO_WIDTH,
+                LobberConstants.VIDEO_HEIGHT));
     }
 
 
