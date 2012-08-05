@@ -47,15 +47,23 @@ public interface LobberConstants
 
     // Location of the lobber grid within UI
     int HELPTEXT_X_POS = 30;
-    int HELPTEXT_Y_POS = 400;
+    int HELPTEXT_Y_POS = 390;
     int HELPTEXT_WIDTH = 240;
-    int HELPTEXT_HEIGHT = 150;
+    int HELPTEXT_HEIGHT = 260;
 
+    // Location of the lobber grid within UI
+    int APP_TITLE_X_POS = 30;
+    int APP_TITLE_Y_POS = 100;
+    int APP_TITLE_WIDTH = 240;
+    int APP_TITLE_HEIGHT = 75;
+    
     // Location of the lobber grid within UI
     int ADVT_X_POS = 950;
     int ADVT_Y_POS = 300;
     int ADVT_WIDTH = 280;
     int ADVT_HEIGHT = 340;
+
+    String APP_TITLE_IMAGE = "resources/AppTitle.png";
 
     String PLAYER_WON_STATUS_IMAGE = "resources/status_icons/Status_Lost.png";
     String OPPONENT_WON_STATUS_IMAGE = "resources/status_icons/Status_Won.png";
@@ -63,7 +71,7 @@ public interface LobberConstants
     String PLAYER_THINKING_STATUS_IMAGE = "resources/status_icons/Status_Thinking.png";
     String WELCOME_AND_WAIT_STATUS_IMAGE = "resources/status_icons/Status_Welcome.png";
     String WAITING_FOR_OPPONENT_STATUS_IMAGE = "resources/status_icons/Status_Waiting.png";
-    String HELP_IMAGE_NORMAL = "resources/status_icons/Status_Won.png";
+    
     
     // Images to show in cells on each scenarios
     String NO_FILLED_NO_HIGHLIGHT = "resources/cell_icons/NF_HN.png";
@@ -76,6 +84,11 @@ public interface LobberConstants
     String PLAYER_2_NO_HIGHLIGHT_LAST_SELECTED = "resources/cell_icons/P2_LS_HN.png";
     String PLAYER_2_HIGHLIGHTED = "resources/cell_icons/P2_NS_HY.png";
     String PLAYER_2_HIGHLIGHTED_LAST_SELECTED = "resources/cell_icons/P2_LS_HY.png";
+
+    String HELP_IMAGE_START = "resources/help_images/Help_Start.png";
+    String HELP_IMAGE_PLAYING = "resources/help_images/Help_Playing.png";
+    String HELP_IMAGE_PLAY_OVER = "resources/help_images/Help_GameOver.png";
+
     String[] ADVT_SLIDESHOW_IMAGES =
     {
         "resources/advt_slideshow/ad1.png", "resources/advt_slideshow/ad2.png",

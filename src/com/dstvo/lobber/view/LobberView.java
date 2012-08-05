@@ -27,6 +27,7 @@ public class LobberView extends Frame
     private ImageBox statusBox;
     private ImageBox helpText;
     Container localContainer;
+    private ImageBox appTitle;
 
     public void initGui()
     {
@@ -42,6 +43,7 @@ public class LobberView extends Frame
             }
         };
         localContainer.setBounds(getBounds());
+        createAppTitle();
         createLobberGrid();
         createStatusDisplay();
         createHelpDisplay();
@@ -111,6 +113,26 @@ public class LobberView extends Frame
                 statusBox.setImage(LobberConstants.WELCOME_AND_WAIT_STATUS_IMAGE);
                 break;
         }
+        updateHelpText(status);
+    }
+
+    private void updateHelpText(int status)
+    {
+        switch (status)
+        {
+            case LobberState.OPPONENT_WON:
+            case LobberState.PLAYER_WON:
+            case LobberState.GAME_DRAWN:
+                helpText.setImage(LobberConstants.HELP_IMAGE_PLAY_OVER);
+                break;
+            case LobberState.PLAYER_THINKING:
+            case LobberState.WAITING_FOR_OPPONENT:
+                helpText.setImage(LobberConstants.HELP_IMAGE_PLAYING);
+                break;
+            case LobberState.WELCOME_PLAYER:
+                helpText.setImage(LobberConstants.HELP_IMAGE_START);
+                break;
+        }
     }
 
     public void reset(boolean difficultyLevelChange)
@@ -131,7 +153,7 @@ public class LobberView extends Frame
         helpText = new ImageBox();
         helpText.setBounds(LobberConstants.HELPTEXT_X_POS, LobberConstants.HELPTEXT_Y_POS,
                 LobberConstants.HELPTEXT_WIDTH, LobberConstants.HELPTEXT_HEIGHT);
-        helpText.setImage(LobberConstants.HELP_IMAGE_NORMAL);
+        helpText.setImage(LobberConstants.HELP_IMAGE_START);
         localContainer.add(helpText);
         helpText.setVisible(true);
     }
@@ -146,5 +168,15 @@ public class LobberView extends Frame
         localContainer.add(slideShow);
         slideShow.startSlideShow();
         slideShow.setVisible(true);
+    }
+
+    private void createAppTitle()
+    {
+        appTitle = new ImageBox();
+        appTitle.setBounds(LobberConstants.APP_TITLE_X_POS, LobberConstants.APP_TITLE_Y_POS,
+                LobberConstants.APP_TITLE_WIDTH, LobberConstants.APP_TITLE_HEIGHT);
+        appTitle.setImage(LobberConstants.APP_TITLE_IMAGE);
+        localContainer.add(appTitle);
+        appTitle.setVisible(true);
     }
 }
