@@ -9,12 +9,10 @@ import com.dstvo.lobber.LobberConstants;
 import com.dstvo.lobber.model.LobberState;
 import com.dstvo.lobber.util.ImageCache;
 import com.dstvo.lobber.util.VideoHandler;
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Frame;
 import java.awt.Graphics;
-import java.awt.Label;
 import java.awt.Rectangle;
 import java.awt.event.KeyListener;
 
