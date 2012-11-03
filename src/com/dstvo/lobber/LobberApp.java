@@ -14,8 +14,6 @@ import com.dstvo.lobber.controller.LobberController;
  */
 public class LobberApp
 {
-    int ROW_COLUMN_COUNT = 10;
-
     /**
      * @param args the command line arguments
      */
