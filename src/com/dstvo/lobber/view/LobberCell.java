@@ -7,15 +7,15 @@ package com.dstvo.lobber.view;
 import com.dstvo.lobber.LobberConstants;
 import com.dstvo.lobber.model.CellContent;
 import com.dstvo.lobber.util.ImageCache;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
+import org.havi.ui.HComponent;
 
 /**
  *
  * @author user
  */
-public class LobberCell extends Component
+public class LobberCell extends HComponent
 {
     private Image image;
     boolean isHighlighted;

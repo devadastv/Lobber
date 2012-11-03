@@ -11,16 +11,19 @@ import com.dstvo.lobber.util.ImageCache;
 import com.dstvo.lobber.util.VideoHandler;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.KeyListener;
+import org.havi.ui.HContainer;
+import org.havi.ui.HScene;
+import org.havi.ui.HSceneFactory;
+import org.havi.ui.HSceneTemplate;
 
 /**
  *
  * @author user
  */
-public class LobberView extends Frame
+public class LobberView extends HContainer
 {
     private LobberGrid grid;
     private KeyListener listener;
@@ -28,13 +31,15 @@ public class LobberView extends Frame
     private ImageBox helpText;
     Container localContainer;
     private ImageBox appTitle;
+    private HScene scene;
 
     public void initGui()
     {
-        this.setBounds(LobberConstants.APP_X_POS, LobberConstants.APP_Y_POS,
-                LobberConstants.APP_WIDTH, LobberConstants.APP_HEIGHT);
+        createHScene();
+//        this.setBounds(LobberConstants.APP_X_POS, LobberConstants.APP_Y_POS,
+//                LobberConstants.APP_WIDTH, LobberConstants.APP_HEIGHT);
         this.setBackground(Color.black);
-        localContainer = new Container() {
+        localContainer = new HContainer() {
             public void paint(Graphics g)
             {
                 g.drawImage(ImageCache.getImage("resources/Background.png"), 0, 0,
@@ -49,7 +54,7 @@ public class LobberView extends Frame
         createHelpDisplay();
         createAdvtSlideShow();
         this.add(localContainer);
-        this.setResizable(false);
+        localContainer.setVisible(true);
         VideoHandler.resizeVideo(new Rectangle(LobberConstants.VIDEO_X_POS,
                 LobberConstants.VIDEO_Y_POS, LobberConstants.VIDEO_WIDTH,
                 LobberConstants.VIDEO_HEIGHT));
@@ -59,6 +64,25 @@ public class LobberView extends Frame
     public void setKeyListener(KeyListener keyListener)
     {
         this.listener = keyListener;
+    }
+
+    private void createHScene()
+    {
+        HSceneFactory factory = HSceneFactory.getInstance();
+        HSceneTemplate hst = new HSceneTemplate();
+        hst.setPreference(
+                HSceneTemplate.SCENE_SCREEN_DIMENSION,
+                new org.havi.ui.HScreenDimension(1, 1),
+                HSceneTemplate.REQUIRED);
+        hst.setPreference(
+                HSceneTemplate.SCENE_SCREEN_LOCATION,
+                new org.havi.ui.HScreenPoint(0, 0),
+                HSceneTemplate.REQUIRED);
+        scene = factory.getBestScene(hst);
+        Rectangle rect = scene.getBounds();
+        setBounds(rect);
+        setVisible(true);
+        scene.add(this);
     }
 
     private void createLobberGrid()
@@ -145,7 +169,7 @@ public class LobberView extends Frame
 
     public void showUI()
     {
-        this.setVisible(true);
+        scene.setVisible(true);
         this.addKeyListener(listener);
         this.requestFocus();
     }

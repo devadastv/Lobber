@@ -5,16 +5,15 @@
 package com.dstvo.lobber.view;
 
 import com.dstvo.lobber.model.GridPosition;
-import com.dstvo.lobber.LobberConstants;
 import com.dstvo.lobber.LobberUtil;
 import com.dstvo.lobber.model.CellContent;
-import java.awt.Container;
+import org.havi.ui.HContainer;
 
 /**
  *
  * @author user
  */
-public class LobberGrid extends Container
+public class LobberGrid extends HContainer
 {
     private LobberCell[][] cells;
     private LobberCell lastPlayerSelectedCell;

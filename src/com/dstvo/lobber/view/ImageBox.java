@@ -6,16 +6,15 @@
 package com.dstvo.lobber.view;
 
 import com.dstvo.lobber.util.ImageCache;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
+import org.havi.ui.HComponent;
 
 /**
  *
  * @author user
  */
-public class ImageBox extends Component
+public class ImageBox extends HComponent
 {
     Image image;
     void setImage(String imagePath)

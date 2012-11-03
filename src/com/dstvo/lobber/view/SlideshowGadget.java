@@ -5,7 +5,6 @@
 
 package com.dstvo.lobber.view;
 
-import com.dstvo.lobber.util.ImageCache;
 import java.util.Timer;
 import java.util.TimerTask;
 
