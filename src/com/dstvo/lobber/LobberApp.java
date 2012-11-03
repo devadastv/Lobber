@@ -10,6 +10,9 @@ import com.dstvo.lobber.controller.LobberController;
 import javax.tv.xlet.Xlet;
 import javax.tv.xlet.XletContext;
 import javax.tv.xlet.XletStateChangeException;
+import org.dvb.event.EventManager;
+import org.dvb.event.UserEventRepository;
+import org.havi.ui.event.HRcEvent;
 
 /**
  *
@@ -17,13 +20,16 @@ import javax.tv.xlet.XletStateChangeException;
  */
 public class LobberApp implements Xlet
 {
+    LobberController controller;
+    
     private void startApp()
     {
         LobberView view = new LobberView();
         LobberModel model = new LobberModel(view);
-        LobberController controller = new LobberController();
+        controller = new LobberController();
         view.setKeyListener(controller);
         controller.setModel(model);
+        addUserEventListener();
         controller.startPlay();
     }
 
@@ -42,5 +48,22 @@ public class LobberApp implements Xlet
 
     public void destroyXlet(boolean bln) throws XletStateChangeException
     {
+        EventManager.getInstance().removeUserEventListener(controller);
+    }
+
+    private void addUserEventListener()
+    {
+        UserEventRepository eventRepo = new UserEventRepository("LobberKeys");
+        eventRepo.addAllArrowKeys();
+        eventRepo.addKey(HRcEvent.VK_UP);
+        eventRepo.addKey(HRcEvent.VK_DOWN);
+        eventRepo.addKey(HRcEvent.VK_RIGHT);
+        eventRepo.addKey(HRcEvent.VK_LEFT);
+        eventRepo.addKey(HRcEvent.VK_ENTER);
+        eventRepo.addKey(HRcEvent.VK_1);
+        eventRepo.addKey(HRcEvent.VK_7);
+        eventRepo.addKey(HRcEvent.VK_8);
+        eventRepo.addKey(HRcEvent.VK_9);
+        EventManager.getInstance().addUserEventListener(controller, eventRepo);
     }
 }

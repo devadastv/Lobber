@@ -9,12 +9,15 @@ import com.dstvo.lobber.LobberUtil;
 import com.dstvo.lobber.model.LobberModel;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import org.dvb.event.UserEvent;
+import org.dvb.event.UserEventListener;
+import org.havi.ui.event.HRcEvent;
 
 /**
  *
  * @author Devadas.Vijayan
  */
-public class LobberController implements KeyListener
+public class LobberController implements KeyListener, UserEventListener
 {
     private LobberModel model;
     private boolean matchInProgress;
@@ -35,7 +38,24 @@ public class LobberController implements KeyListener
 
     public void keyPressed(KeyEvent e)
     {
-        switch (e.getKeyCode())
+        processKeyCode(e.getKeyCode());
+    }
+
+    public void keyReleased(KeyEvent e)
+    {
+    }
+
+    public void userEventReceived(UserEvent userEvent)
+    {
+        if (userEvent.getType() == HRcEvent.KEY_PRESSED)
+        {
+            processKeyCode(userEvent.getCode());
+        }
+    }
+
+    private void processKeyCode(int keyCode)
+    {
+        switch (keyCode)
         {
             case KeyEvent.VK_RIGHT:
                 model.moveRight();
@@ -79,9 +99,5 @@ public class LobberController implements KeyListener
                 }
                 break;
         }
-    }
-
-    public void keyReleased(KeyEvent e)
-    {
     }
 }
